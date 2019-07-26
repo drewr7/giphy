@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Giphy Sports</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Giphy Sports Icons</h1>
+
+    <div id="buttons-container"></div>
+    <br>
+
+    <div id="gif-container"></div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+var people =['Alex Bregman ','James Harden','Lebron James','Mike Trout', 'Jose Altuve', 'Tyrann Mathieu','Odell Beckham Jr.','Christian McCaffery','Kevin Durant','DeAndre Hopkins','Deshaun Watson','Julio Jones','Kobe Bryant','Mike Tyson','Babe Ruth','Michael Jordan'];
+
+var person = $(this).attr("data-name");
+var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + person + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
+
+// Deleting the button prior to adding new buttons
+$("#buttons-container").empty();
+
+// Looping through the array of people
+for (var i = 0; i < people.length; i++) {
+
+  // generating buttons for each person
+  var a = $("<button>");
+  a.addClass("btn btn-warning");
+  a.css({"margin":"3px"});
+  a.attr("data-name", people[i]);
+  a.text(people[i]);
+  $("#buttons-container").append(a);
+}
+
+$("button").on("click", function() {
+
+var people =['Lebron James','Mike Trout','Alex Bregman ','James Harden','Forrest Gump'];
+
+var person = $(this).attr("data-name");
+var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + person + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function(response) {
+          console.log(queryURL);
+
+          console.log(response);
+          // storing the data from the AJAX request
+          var results = response.data;
+
+          // Looping through each result item
+          for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag
+            var peopleDiv = $("<div>");
+              peopleDiv.css({"margin":"3px"});
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[i].rating);
+
+            // Creating and storing an image tag
+            var peopleImage = $("<img>");
+            // Setting the src, class and state attribute 
+            peopleImage.attr("src", results[i].images.fixed_height_still.url);
+            peopleImage.attr("class", "gif");
+            peopleImage.attr('data-state', 'still');
+
+            peopleImage.attr("data-still", results[i].images.fixed_height_still.url);
+            peopleImage.attr("data-animate", results[i].images.fixed_height.url);
+
+            //peopleDiv.append(p);
+            //peopleDiv.append(peopleImage);
+
+            $("#gif-container").prepend(peopleImage);
+          }
+
+          $(".gif").on("click", function() {
+      // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+      var state = $(this).attr("data-state");
+      // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+      // Then, set the image's data-state to animate
+      // Else set src to the data-still value
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
+        });
+    });
+
+    
+
+  </script>
+</body>
+
+</html>
